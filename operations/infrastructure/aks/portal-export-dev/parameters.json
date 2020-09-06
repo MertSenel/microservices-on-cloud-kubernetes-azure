@@ -1,0 +1,60 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceName": {
+            "value": "mertdevaksweu01"
+        },
+        "location": {
+            "value": "westeurope"
+        },
+        "dnsPrefix": {
+            "value": "mertdevaksweu01-dns"
+        },
+        "kubernetesVersion": {
+            "value": "1.16.13"
+        },
+        "networkPlugin": {
+            "value": "azure"
+        },
+        "enableRBAC": {
+            "value": true
+        },
+        "enablePrivateCluster": {
+            "value": false
+        },
+        "enableHttpApplicationRouting": {
+            "value": false
+        },
+        "vmssNodePool": {
+            "value": true
+        },
+        "vnetSubnetID": {
+            "value": "/subscriptions/9ba089ac-b8fc-496b-a408-e42840ba07de/resourceGroups/mert-dev-aks-weu01/providers/Microsoft.Network/virtualNetworks/mert-dev-aks-weu01-vnet/subnets/default"
+        },
+        "serviceCidr": {
+            "value": "10.0.0.0/16"
+        },
+        "dnsServiceIP": {
+            "value": "10.0.0.10"
+        },
+        "dockerBridgeCidr": {
+            "value": "172.17.0.1/16"
+        },
+        "workspaceName": {
+            "value": "newaistest"
+        },
+        "omsWorkspaceId": {
+            "value": "/subscriptions/9ba089ac-b8fc-496b-a408-e42840ba07de/resourcegroups/newaistest/providers/microsoft.operationalinsights/workspaces/newaistest"
+        },
+        "workspaceRegion": {
+            "value": "westus2"
+        },
+        "acrName": {
+            "value": "mertdevacrweu01"
+        },
+        "acrResourceGroup": {
+            "value": "mert-dev-aks-weu01"
+        }
+    }
+}
