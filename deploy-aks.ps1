@@ -61,15 +61,7 @@ Write-Output "Got kubectl Credentials"
 
 #region Install Istio 
 Write-Output "Start istio operator init"
-
-#Download the istioctl first
-$ISTIO_VERSION="1.7.3"
-[Net.ServicePointManager]::SecurityProtocol = "tls12"
-$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -URI "https://github.com/istio/istio/releases/download/$ISTIO_VERSION/istioctl-$ISTIO_VERSION-win.zip" -OutFile "istioctl-$ISTIO_VERSION.zip"
-Expand-Archive -Path "istioctl-$ISTIO_VERSION.zip" -DestinationPath .
-
-./istioctl.exe operator init
-
+istioctl operator init
 Write-Output "Finished istio operator init"
 
 Write-Output "Startkubectl create ns istio-system"
