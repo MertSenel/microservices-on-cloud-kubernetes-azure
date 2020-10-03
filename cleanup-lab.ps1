@@ -4,9 +4,11 @@ param (
     [Parameter()][string]$EnvironmentVariableName = 'AZURE_CREDENTIALS',
     [Parameter()][string]$ArmTemplateParameterFilePath = './arm/aks.parameters.json'
 )
+$localSpnCreds = Get-ChildItem -Path "Env:\$EnvironmentVariableName"
+$spn = $localSpnCreds.Value | ConvertFrom-Json
+
 $ArmTemplateParameters = Get-Content -Path $ArmTemplateParameterFilePath | ConvertFrom-Json -Depth 10
 $config = $ArmTemplateParameters.parameters.config.value
-$ResourceGroupName = $config.project + '-' + $config.env + '-' + 'aks' + '-' + $config.region + $config.num
 
 #region Connect To Azure if Not connected Already
 $CurrentContext = Get-AzContext
