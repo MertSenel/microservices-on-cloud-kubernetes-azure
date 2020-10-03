@@ -17,10 +17,10 @@
             "value": 0
         },
         "agentCount": {
-            "value": 2
+            "value": 3
         },
         "agentVMSize": {
-            "value": "Standard_B2ms"
+            "value": "Standard_B2s"
         },
         "osType": {
             "value": "Linux"
