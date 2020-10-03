@@ -30,7 +30,7 @@ jobs:
           # Set this value to true to enable Azure PowerShell Login in addition to Az CLI login
           enable-AzPSSession: true # optional
           
-      - name: Azure PowerShell Action
+      - name: Azure PowerShell - Deploy AKS Cluster and Istio
         uses: Azure/powershell@v1
         with:
           # Specify the Az PowerShell script here.
