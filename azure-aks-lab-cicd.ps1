@@ -85,7 +85,6 @@ kubectl wait --for=condition=available --timeout=500s deployment/kiali -n istio-
 Write-Output "Finished Waiting for Istio Addons"
 
 
-
 #Deploy Polaris
 Write-Output "Start Deploy Polaris"
 kubectl apply -f https://github.com/FairwindsOps/polaris/releases/latest/download/dashboard.yaml
@@ -100,13 +99,8 @@ kubectl label namespace --overwrite "$APPL_NS" istio-injection='enabled'
 kubectl get namespaces -L istio-injection
 Write-Output "Finished Activatiation istio for ns: $APPL_NS"
 
-Write-Output "### deploy appl istio manifests:"
-kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/$APPL_VERSION/istio-manifests/frontend-gateway.yaml"
-kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/$APPL_VERSION/istio-manifests/frontend.yaml"
-kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/$APPL_VERSION/istio-manifests/whitelist-egress-googleapis.yaml"
-
 Write-Output "### deploy application: "
-kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/$APPL_VERSION/release/kubernetes-manifests.yaml"
+kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/$($APPL_VERSION)/release/kubernetes-manifests.yaml"
 Write-Output "### wait for resources to become available: "
 kubectl wait --for=condition=available --timeout=500s deployment/adservice
 kubectl wait --for=condition=available --timeout=500s deployment/cartservice
@@ -119,3 +113,7 @@ kubectl wait --for=condition=available --timeout=500s deployment/paymentservice
 kubectl wait --for=condition=available --timeout=500s deployment/productcatalogservice
 kubectl wait --for=condition=available --timeout=500s deployment/recommendationservice
 kubectl wait --for=condition=available --timeout=500s deployment/shippingservice
+
+
+
+
