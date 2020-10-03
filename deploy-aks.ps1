@@ -51,12 +51,7 @@ $AzDeployment = New-AzResourceGroupDeployment @Args
 Write-Output "End ARM Deployment"
 
 Write-Output "Get kubectl Credentials"
-if ($LASTEXITCODE -eq 0) {
-    Import-AzAksCredential -ResourceGroupName $ResourceGroupName -Name $AksClusterName -Force
-}
-else {
-    exit 1
-}
+Import-AzAksCredential -ResourceGroupName $ResourceGroupName -Name $AksClusterName -Force
 Write-Output "Got kubectl Credentials"
 
 #region Install Istio 
