@@ -1,5 +1,5 @@
 # Specify the Istio version that will be leveraged throughout these instructions
-$localToolPath = $localToolPath
+$localToolPath = 'C:\Users\Mert\source\tools'
 $ISTIO_VERSION="1.7.3"
 [Net.ServicePointManager]::SecurityProtocol = "tls12"
 $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -URI "https://github.com/istio/istio/releases/download/$ISTIO_VERSION/istioctl-$ISTIO_VERSION-win.zip" -OutFile "istioctl-$ISTIO_VERSION.zip"
