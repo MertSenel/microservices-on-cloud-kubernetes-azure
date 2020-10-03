@@ -1,0 +1,32 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "config": {
+            "value": {
+                "project": "mert",
+                "env": "lab",
+                "region": "aue",
+                "num": "01"
+            }
+        },
+        "location": {
+            "value": "Australia East"
+        },
+        "osDiskSizeGB": {
+            "value": 0
+        },
+        "agentCount": {
+            "value": 1
+        },
+        "agentVMSize": {
+            "value": "Standard_B2s"
+        },
+        "osType": {
+            "value": "Linux"
+        },
+        "kubernetesVersion": {
+            "value": "1.17.11"
+        }
+    }
+}
