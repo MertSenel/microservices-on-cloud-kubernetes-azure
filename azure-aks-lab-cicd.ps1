@@ -63,12 +63,13 @@ Write-Output "Finished istio operator init"
 Write-Output "Startkubectl create ns istio-system"
 kubectl create ns istio-system
 Write-Output "Finished kubectl create ns istio-system"
+Start-Sleep -Seconds 5
 
 Write-Output "Startkubectl apply -f istio.aks.yaml"
 kubectl apply -f istio.aks.yaml 
 Write-Output "Finished kubectl apply -f istio.aks.yaml"
 
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 30
 
 Write-Output "Start Waiting for Istio Addons"
 kubectl wait --for=condition=available --timeout=500s deployment/prometheus -n istio-system
