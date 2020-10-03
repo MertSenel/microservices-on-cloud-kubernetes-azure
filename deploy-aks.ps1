@@ -82,16 +82,16 @@ Write-Output "Finished kubectl apply -f istio.aks.yaml"
 
 Start-Sleep -Seconds 5
 
-Write-Host "Start Waiting for Istio Addons"
+Write-Output "Start Waiting for Istio Addons"
 kubectl wait --for=condition=available --timeout=500s deployment/prometheus -n istio-system
 kubectl wait --for=condition=available --timeout=500s deployment/grafana -n istio-system
 kubectl wait --for=condition=available --timeout=500s deployment/kiali -n istio-system
-Write-Host "Finished Waiting for Istio Addons"
+Write-Output "Finished Waiting for Istio Addons"
 
 #Deploy Polaris
-Write-Host "Start Deploy Polaris"
+Write-Output "Start Deploy Polaris"
 kubectl apply -f https://github.com/FairwindsOps/polaris/releases/latest/download/dashboard.yaml
 kubectl get namespaces | Select-String polaris
 kubectl wait --for=condition=available --timeout=500s deployment/polaris-dashboard -n polaris
 #kubectl port-forward --namespace polaris svc/polaris-dashboard 8080:80
-Write-Host "Finished Deploy Polaris"
+Write-Output "Finished Deploy Polaris"
