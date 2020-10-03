@@ -1,0 +1,57 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the main branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: Azure/login@v1.1
+        with:
+          # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          # Set this value to true to enable Azure PowerShell Login in addition to Az CLI login
+          enable-AzPSSession: true # optional
+          
+      - name: Azure PowerShell - Deploy AKS Cluster and Istio
+        uses: Azure/powershell@v1
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+        with:
+          # Specify the Az PowerShell script here.
+          inlineScript: |
+            ./deploy-aks.ps1
+          # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
+          azPSVersion: 4.7.0
+          # Select the value of the ErrorActionPreference variable for executing the script. Options: stop, continue, silentlyContinue. Default is Stop.
+          errorActionPreference: Stop # optional, default is Stop
+          # If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream.
+          failOnStandardError: false # optional, default is false
+          
+#       - name: Deploy AKS Cluster and Istio
+#         shell: pwsh
+#         env: 
+#          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+#         run: |
+#           ./deploy-aks.ps1
+
+
+
+
