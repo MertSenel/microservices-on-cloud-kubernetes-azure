@@ -19,6 +19,6 @@ $SPNCreds = az ad sp create-for-rbac --name $SpnName --sdk-auth --role contribut
 $SPNCreds | Set-Content -Path "./$EnvironmentVariableName.json" -Force
 
 # We will also save it as an environment variable
-$LocalEnvVar = $SPNCreds | ConvertFrom-Json | ConvertTo-Json -Compress
+$LocalEnvVar = Get-Content -Path "./$EnvironmentVariableName.json" | ConvertFrom-Json | ConvertTo-Json -Compress
 Set-Item -Path "Env:\$EnvironmentVariableName" -Value $LocalEnvVar
 
