@@ -21,6 +21,16 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+    
+      - name: Install IstioCtl
+        run: |-
+          # Specify the Istio version that will be leveraged throughout these instructions
+          ISTIO_VERSION=1.7.3
+
+          curl -sL "https://github.com/istio/istio/releases/download/$ISTIO_VERSION/istioctl-$ISTIO_VERSION-linux-amd64.tar.gz" | tar xz
+          
+          sudo mv ./istioctl /usr/local/bin/istioctl
+          sudo chmod +x /usr/local/bin/istioctl
 
       - name: Azure Login
         uses: Azure/login@v1.1
@@ -45,13 +55,6 @@ jobs:
           # If this is true, this task will fail if any errors are written to the error pipeline, or if any data is written to the Standard Error stream.
           failOnStandardError: false # optional, default is false
           
-#       - name: Deploy AKS Cluster and Istio
-#         shell: pwsh
-#         env: 
-#          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-#         run: |
-#           ./deploy-aks.ps1
-
 
 
 
