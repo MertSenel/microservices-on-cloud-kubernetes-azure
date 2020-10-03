@@ -32,6 +32,8 @@ jobs:
           
       - name: Deploy AKS Cluster and Istio
         shell: pwsh
+        env: 
+         AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
         run: |
           ./deploy-aks.ps1
 
