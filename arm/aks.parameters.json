@@ -7,7 +7,7 @@
                 "project": "test",
                 "env": "lab",
                 "region": "aue",
-                "num": "01"
+                "num": "02"
             }
         },
         "location": {
@@ -20,7 +20,7 @@
             "value": 3
         },
         "agentVMSize": {
-            "value": "Standard_B2s"
+            "value": "Standard_B2ms"
         },
         "osType": {
             "value": "Linux"
