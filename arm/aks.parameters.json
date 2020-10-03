@@ -4,10 +4,10 @@
     "parameters": {
         "config": {
             "value": {
-                "project": "mert",
+                "project": "test",
                 "env": "lab",
                 "region": "aue",
-                "num": "01"
+                "num": "05"
             }
         },
         "location": {
@@ -17,10 +17,10 @@
             "value": 0
         },
         "agentCount": {
-            "value": 1
+            "value": 2
         },
         "agentVMSize": {
-            "value": "Standard_B2s"
+            "value": "Standard_B2ms"
         },
         "osType": {
             "value": "Linux"
