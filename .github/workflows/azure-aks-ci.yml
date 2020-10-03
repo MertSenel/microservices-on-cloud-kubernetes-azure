@@ -30,7 +30,7 @@ jobs:
           # Set this value to true to enable Azure PowerShell Login in addition to Az CLI login
           enable-AzPSSession: true # optional
           
-      - name: Generate config file
+      - name: Deploy AKS Cluster and Istio
         shell: pwsh
         run: |
           ./deploy-aks.ps1
