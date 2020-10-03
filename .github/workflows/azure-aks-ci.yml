@@ -33,5 +33,5 @@ jobs:
       - name: Generate config file
         shell: pwsh
         run: |
-          deploy-aks.ps1
+          ./deploy-aks.ps1
 
