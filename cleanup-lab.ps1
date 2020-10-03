@@ -10,6 +10,7 @@ $spn = $localSpnCreds.Value | ConvertFrom-Json
 $ArmTemplateParameters = Get-Content -Path $ArmTemplateParameterFilePath | ConvertFrom-Json -Depth 10
 $config = $ArmTemplateParameters.parameters.config.value
 
+$SubscriptionId = $spn.subscriptionId
 $ResourceGroupName = $config.project + '-' + $config.env + '-' + 'aks' + '-' + $config.region + $config.num
 
 #region Connect To Azure if Not connected Already
