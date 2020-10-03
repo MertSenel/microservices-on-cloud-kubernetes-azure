@@ -22,13 +22,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Azure Login
-        uses: Azure/login@v1.1
-        with:
-          # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          # Set this value to true to enable Azure PowerShell Login in addition to Az CLI login
-          enable-AzPSSession: true # optional
+#       - name: Azure Login
+#         uses: Azure/login@v1.1
+#         with:
+#           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+#           creds: ${{ secrets.AZURE_CREDENTIALS }}
+#           # Set this value to true to enable Azure PowerShell Login in addition to Az CLI login
+#           enable-AzPSSession: true # optional
           
       - name: Deploy AKS Cluster and Istio
         shell: pwsh
