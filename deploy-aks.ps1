@@ -3,7 +3,8 @@ param (
     # Name of the Environment Variable Script will get the Azure SPN Credentials
     [Parameter()][string]$EnvironmentVariableName = 'AZURE_CREDENTIALS',
     [Parameter()][string]$ArmTemplateFilePath = './arm/aks.json',
-    [Parameter()][string]$ArmTemplateParameterFilePath = './arm/aks.parameters.json'
+    [Parameter()][string]$ArmTemplateParameterFilePath = './arm/aks.parameters.json',
+    [Parameter()][string]$ISTIO_VERSION = "1.7.3"
 )
 
 
@@ -47,6 +48,8 @@ $Args = @{
 Write-Output "Start ARM Deployment"
 $AzDeployment = New-AzResourceGroupDeployment @Args
 
+Write-Output "End ARM Deployment"
+
 Write-Output "Get kubectl Credentials"
 if ($LASTEXITCODE -eq 0) {
     Import-AzAksCredential -ResourceGroupName $ResourceGroupName -Name $AksClusterName -Force
@@ -54,20 +57,33 @@ if ($LASTEXITCODE -eq 0) {
 else {
     exit 1
 }
+Write-Output "Got kubectl Credentials"
 
 #region Install Istio 
-Write-Output "istio operator init"
-istioctl operator init
+Write-Output "Start istio operator init"
 
-Write-Output "kubectl create ns istio-system"
+#Download the istioctl first
+$ISTIO_VERSION="1.7.3"
+[Net.ServicePointManager]::SecurityProtocol = "tls12"
+$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -URI "https://github.com/istio/istio/releases/download/$ISTIO_VERSION/istioctl-$ISTIO_VERSION-win.zip" -OutFile "istioctl-$ISTIO_VERSION.zip"
+Expand-Archive -Path "istioctl-$ISTIO_VERSION.zip" -DestinationPath .
+
+./istioctl.exe operator init
+
+Write-Output "Finished istio operator init"
+
+Write-Output "Startkubectl create ns istio-system"
 kubectl create ns istio-system
+Write-Output "Finished kubectl create ns istio-system"
 
-Write-Output "kubectl apply -f istio.aks.yaml"
+Write-Output "Startkubectl apply -f istio.aks.yaml"
 kubectl apply -f istio.aks.yaml 
+Write-Output "Finished kubectl apply -f istio.aks.yaml"
 
 Start-Sleep -Seconds 5
 
-Write-Host "Waiting for Istio Addons"
+Write-Host "Start Waiting for Istio Addons"
 kubectl wait --for=condition=available --timeout=500s deployment/prometheus -n istio-system
 kubectl wait --for=condition=available --timeout=500s deployment/grafana -n istio-system
 kubectl wait --for=condition=available --timeout=500s deployment/kiali -n istio-system
+Write-Host "Finished Waiting for Istio Addons"
