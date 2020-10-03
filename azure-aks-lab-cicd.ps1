@@ -4,9 +4,10 @@ param (
     [Parameter()][string]$EnvironmentVariableName = 'AZURE_CREDENTIALS',
     [Parameter()][string]$ArmTemplateFilePath = './arm/aks.json',
     [Parameter()][string]$ArmTemplateParameterFilePath = './arm/aks.parameters.json',
-    [Parameter()][string]$ISTIO_VERSION = "1.7.3"
+    [Parameter()][string]$ISTIO_VERSION = "1.7.3",
+    [Parameter()][string]$APPL_VERSION = 'v0.2.0',
+    [Parameter()][string]$APPL_NS = 'default'
 )
-
 
 $localSpnCreds = Get-ChildItem -Path "Env:\$EnvironmentVariableName"
 $spn = $localSpnCreds.Value | ConvertFrom-Json
@@ -51,12 +52,7 @@ $AzDeployment = New-AzResourceGroupDeployment @Args
 Write-Output "End ARM Deployment"
 
 Write-Output "Get kubectl Credentials"
-if ($LASTEXITCODE -eq 0) {
-    Import-AzAksCredential -ResourceGroupName $ResourceGroupName -Name $AksClusterName -Force
-}
-else {
-    exit 1
-}
+Import-AzAksCredential -ResourceGroupName $ResourceGroupName -Name $AksClusterName -Force
 Write-Output "Got kubectl Credentials"
 
 #region Install Istio 
@@ -80,6 +76,7 @@ kubectl wait --for=condition=available --timeout=500s deployment/grafana -n isti
 kubectl wait --for=condition=available --timeout=500s deployment/kiali -n istio-system
 Write-Output "Finished Waiting for Istio Addons"
 
+
 #Deploy Polaris
 Write-Output "Start Deploy Polaris"
 kubectl apply -f https://github.com/FairwindsOps/polaris/releases/latest/download/dashboard.yaml
@@ -87,3 +84,28 @@ kubectl get namespaces | Select-String polaris
 kubectl wait --for=condition=available --timeout=500s deployment/polaris-dashboard -n polaris
 #kubectl port-forward --namespace polaris svc/polaris-dashboard 8080:80
 Write-Output "Finished Deploy Polaris"
+
+#Deploy Services
+Write-Output "Start Activatiation istio for ns: $APPL_NS"
+kubectl label namespace --overwrite "$APPL_NS" istio-injection='enabled'
+kubectl get namespaces -L istio-injection
+Write-Output "Finished Activatiation istio for ns: $APPL_NS"
+
+Write-Output "### deploy application: "
+kubectl apply -f "https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/$($APPL_VERSION)/release/kubernetes-manifests.yaml"
+Write-Output "### wait for resources to become available: "
+kubectl wait --for=condition=available --timeout=500s deployment/adservice
+kubectl wait --for=condition=available --timeout=500s deployment/cartservice
+kubectl wait --for=condition=available --timeout=500s deployment/checkoutservice
+kubectl wait --for=condition=available --timeout=500s deployment/currencyservice
+kubectl wait --for=condition=available --timeout=500s deployment/emailservice
+kubectl wait --for=condition=available --timeout=500s deployment/frontend
+kubectl wait --for=condition=available --timeout=500s deployment/loadgenerator
+kubectl wait --for=condition=available --timeout=500s deployment/paymentservice
+kubectl wait --for=condition=available --timeout=500s deployment/productcatalogservice
+kubectl wait --for=condition=available --timeout=500s deployment/recommendationservice
+kubectl wait --for=condition=available --timeout=500s deployment/shippingservice
+
+
+
+
