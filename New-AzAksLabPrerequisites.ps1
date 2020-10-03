@@ -5,7 +5,7 @@
     Altough Secrets are protected, I still won't use a Subscription Level RBAC assignment, it's way too dangerous for the convinience it provides. 
 #>
 
-#Requires -Module @{ ModuleName = 'Az'; ModuleVersion = '4.7' }
+#Requires -Module @{ ModuleName = 'Az'; ModuleVersion = '4.7.0' }
 
 #Get the Local Config File
 $localConfigPath = "./local.settings.json"
