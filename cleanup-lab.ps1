@@ -2,9 +2,10 @@
 param (
     # Name of the Environment Variable Script will get the Azure SPN Credentials
     [Parameter()][string]$EnvironmentVariableName = 'AZURE_CREDENTIALS',
-    [Parameter()][string]$ArmTemplateFilePath = './arm/aks.json'
+    [Parameter()][string]$ArmTemplateParameterFilePath = './arm/aks.parameters.json'
 )
-
+$ArmTemplateParameters = Get-Content -Path $ArmTemplateParameterFilePath | ConvertFrom-Json -Depth 10
+$config = $ArmTemplateParameters.parameters.config.value
 $ResourceGroupName = $config.project + '-' + $config.env + '-' + 'aks' + '-' + $config.region + $config.num
 
 #region Connect To Azure if Not connected Already
