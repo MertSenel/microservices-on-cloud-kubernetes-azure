@@ -82,9 +82,22 @@ Write-Output "Startkubectl apply -f istio.aks.yaml"
 kubectl apply -f istio.aks.yaml 
 Write-Output "Finished kubectl apply -f istio.aks.yaml"
 
-Start-Sleep -Seconds 30
+$prometheus = kubectl get deployment.apps/prometheus -n istio-system
+$grafana = kubectl get deployment.apps/grafana -n istio-system
+$kiali = kubectl get deployment.apps/kiali -n istio-system
 
-Write-Output "Start Waiting for Istio Addons"
+$retryCounter = 0
+while (((!$prometheus) -or (!$grafana) -or (!$kiali)) -and ($retryCounter -lt 30)) {
+    $prometheus = kubectl get deployment.apps/prometheus -n istio-system
+    $grafana = kubectl get deployment.apps/grafana -n istio-system
+    $kiali = kubectl get deployment.apps/kiali -n istio-system
+    Write-Output "Waiting for Istio Add-On Deployment To be Created"
+    Start-Sleep -Seconds 5
+    $retryCounter++
+}
+Write-Output "All Istio Add-On Deployments Found"
+
+Write-Output "Start Waiting for Istio Addon Deployment to be Completed"
 kubectl wait --for=condition=available --timeout=500s deployment/prometheus -n istio-system
 kubectl wait --for=condition=available --timeout=500s deployment/grafana -n istio-system
 kubectl wait --for=condition=available --timeout=500s deployment/kiali -n istio-system
