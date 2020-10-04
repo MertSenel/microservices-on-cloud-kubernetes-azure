@@ -90,11 +90,11 @@ $kiali = kubectl get deployment.apps/kiali -n istio-system
 
 $retryCounter = 0
 while (((!$prometheus) -or (!$grafana) -or (!$kiali)) -and ($retryCounter -lt 30)) {
-    $prometheus = kubectl get deployment.apps/prometheus -n istio-system
-    $grafana = kubectl get deployment.apps/grafana -n istio-system
-    $kiali = kubectl get deployment.apps/kiali -n istio-system
-    Write-Output "Waiting for Istio Add-On Deployment To be Created"
-    Start-Sleep -Seconds 5
+    $prometheus = (kubectl get deployment.apps/prometheus -n istio-system 2> $null)
+    $grafana = (kubectl get deployment.apps/grafana -n istio-system 2> $null)
+    $kiali = (kubectl get deployment.apps/kiali -n istio-system 2> $null)
+    Write-Output "Waiting for Istio Add-On Deployments To be Created"
+    Start-Sleep -Seconds 30
     $retryCounter++
 }
 Write-Output "All Istio Add-On Deployments Found"
