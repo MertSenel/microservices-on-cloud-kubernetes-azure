@@ -4,7 +4,7 @@
     "parameters": {
         "config": {
             "value": {
-                "project": "mstech",
+                "project": "mert",
                 "env": "lab",
                 "region": "aue",
                 "num": "01"
