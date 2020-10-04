@@ -7,21 +7,12 @@ param (
     [Parameter()][string]$ISTIO_VERSION = "1.7.3",
     [Parameter()][string]$APPL_VERSION = 'v0.2.0',
     [Parameter()][string]$APPL_NS = 'default',
-    [Parameter()][switch]$ForceUnique,
+    [Parameter()][switch]$DeployInfra,
+    [Parameter()][switch]$ForceUniqueName,
     [Parameter()][switch]$CleanUpAfter
 )
-# If ForceUnique naming flag is passed, either use github run id, if not available just use a random number
-$Build_Uid = ""
-if ($ForceUnique) {
-    if ((Test-Path -Path "Env:\GITHUB_RUN_ID")) {
-        Write-Output "Github Run ID is being used"
-        $Build_Uid = (Get-ChildItem -Path "Env:\GITHUB_RUN_ID").value = (Get-ChildItem -Path "Env:\GITHUB_RUN_ID").value
-    }
-    else {
-        Write-Output "Github Run ID cannot be found a random integer is being used"
-        $Build_Uid = (Get-Random -Maximum 99999).ToString()
-    }
-}
+# If ForceUniqueName naming flag is passed Assign a Hyphen followed by a Random Integer to $Build_Uid if not passed just assign an empty String
+$Build_Uid = $ForceUniqueName ? ('-' + (Get-Random -Maximum 99999).ToString()) : ""
 
 #Setup config and credentials
 $localSpnCreds = Get-ChildItem -Path "Env:\$EnvironmentVariableName"
@@ -32,7 +23,7 @@ $config = $ArmTemplateParameters.parameters.config.value
 
 #region Curate Variables
 $SubscriptionId = $spn.subscriptionId
-$ResourceGroupName = $config.project + '-' + $config.env + '-' + 'aks' + '-' + $config.region + $config.num + '-' + $Build_Uid
+$ResourceGroupName = $config.project + '-' + $config.env + '-' + 'aks' + '-' + $config.region + $config.num + $Build_Uid
 $Location = $ArmTemplateParameters.parameters.location.value
 #endregion
 
@@ -50,21 +41,24 @@ if ((!$CurrentContext) -or ($CurrentContext.Subscription.Id -ne $SubscriptionId)
 }
 #endregion
 
-#Create/Update the resource Group
-New-AzResourceGroup -ResourceGroupName $ResourceGroupName -Location $Location -Force | out-null
+if ($DeployInfra) {
+    #Create/Update the resource Group
+    New-AzResourceGroup -ResourceGroupName $ResourceGroupName -Location $Location -Force | out-null
 
-$Args = @{
-    ResourceGroupName     = $ResourceGroupName
-    Name                  = "$(new-guid)"
-    TemplateFile          = $ArmTemplateFilePath
-    TemplateParameterFile = $ArmTemplateParameterFilePath
-    GITHUB_RUN_ID         = $Build_Uid
+    $Args = @{
+        ResourceGroupName     = $ResourceGroupName
+        Name                  = "$(new-guid)"
+        TemplateFile          = $ArmTemplateFilePath
+        TemplateParameterFile = $ArmTemplateParameterFilePath
+        GITHUB_RUN_ID         = $Build_Uid
+    }
+
+    Write-Output "Start ARM Deployment"
+    $AzDeployment = New-AzResourceGroupDeployment @Args
+    $AksClusterName = $AzDeployment.Outputs.aksClusterName.value
+    Write-Output "End ARM Deployment"
 }
 
-Write-Output "Start ARM Deployment"
-$AzDeployment = New-AzResourceGroupDeployment @Args
-$AksClusterName = $AzDeployment.Outputs.aksClusterName.value
-Write-Output "End ARM Deployment"
 
 Write-Output "Get kubectl Credentials"
 Import-AzAksCredential -ResourceGroupName $ResourceGroupName -Name $AksClusterName -Force
@@ -137,5 +131,9 @@ kubectl wait --for=condition=available --timeout=500s deployment/shippingservice
 
 #Clean Up
 if ($CleanUpAfter) {
+    Write-Output "Clean Up Lab Resource as CleanUpAfter Flag is Passed"
     Remove-AzResourceGroup -Name $ResourceGroupName -Force
+}
+else {
+    kubectl get all -n "$APPL_NS"
 }
