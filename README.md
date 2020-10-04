@@ -2,7 +2,7 @@
 
 # Microservices on cloud-based Kubernetes - (Azure Kubernetes Service)
 
-![Microservices on AKS E2E CI](https://github.com/MertSenel/azure-k8s-lab-private/workflows/Microservices%20on%20AKS%20E2E%20CI/badge.svg?branch=main)
+![Microservices on AKS E2E CI](https://github.com/MertSenel/microservices-on-cloud-kubernetes-azure/workflows/Microservices%20on%20AKS%20E2E%20CI/badge.svg?branch=main)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ### Introduction
