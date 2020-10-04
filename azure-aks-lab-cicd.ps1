@@ -6,9 +6,22 @@ param (
     [Parameter()][string]$ArmTemplateParameterFilePath = './arm/aks.parameters.json',
     [Parameter()][string]$ISTIO_VERSION = "1.7.3",
     [Parameter()][string]$APPL_VERSION = 'v0.2.0',
-    [Parameter()][string]$APPL_NS = 'default'
+    [Parameter()][string]$APPL_NS = 'default',
+    [Parameter()][switch]$ForceUnique,
+    [Parameter()][switch]$CleanUpAfter
 )
+# If ForceUnique naming flag is passed, either use github run id, if not available just use a random number
+$Build_Uid = ""
+if ($ForceUnique) {
+    if ((Test-Path -Path "Env:\GITHUB_RUN_ID")) {
+        $Build_Uid = (Get-ChildItem -Path "Env:\GITHUB_RUN_ID").value = (Get-ChildItem -Path "Env:\GITHUB_RUN_ID").value
+    }
+    else {
+        $Build_Uid = (Get-Random -Maximum 99999).ToString()
+    }
+}
 
+#Setup config and credentials
 $localSpnCreds = Get-ChildItem -Path "Env:\$EnvironmentVariableName"
 $spn = $localSpnCreds.Value | ConvertFrom-Json
 
@@ -18,7 +31,6 @@ $config = $ArmTemplateParameters.parameters.config.value
 #region Curate Variables
 $SubscriptionId = $spn.subscriptionId
 $ResourceGroupName = $config.project + '-' + $config.env + '-' + 'aks' + '-' + $config.region + $config.num
-$AksClusterName = $config.project + $config.env + $config.region + $config.num + '-aks'
 $Location = $ArmTemplateParameters.parameters.location.value
 #endregion
 
@@ -44,11 +56,12 @@ $Args = @{
     Name                  = "$(new-guid)"
     TemplateFile          = $ArmTemplateFilePath
     TemplateParameterFile = $ArmTemplateParameterFilePath
+    GITHUB_RUN_ID         = $Build_Uid
 }
 
 Write-Output "Start ARM Deployment"
 $AzDeployment = New-AzResourceGroupDeployment @Args
-
+$AksClusterName = $AzDeployment.Outputs.aksClusterName.value
 Write-Output "End ARM Deployment"
 
 Write-Output "Get kubectl Credentials"
@@ -107,6 +120,7 @@ kubectl wait --for=condition=available --timeout=500s deployment/productcatalogs
 kubectl wait --for=condition=available --timeout=500s deployment/recommendationservice
 kubectl wait --for=condition=available --timeout=500s deployment/shippingservice
 
-
-
-
+#Clean Up
+if ($CleanUpAfter) {
+    Remove-AzResourceGroup -Name $ResourceGroupName -Force
+}

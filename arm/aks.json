@@ -56,12 +56,19 @@
             "metadata": {
                 "description": "description"
             }
+        },
+        "GITHUB_RUN_ID": {
+            "type": "string",
+            "defaultValue":  "",
+            "metadata": {
+                "description": "Unique GITHUB_RUN_ID"
+            }
         }
     },
     "variables": {
-        "logAnalyticsWorkspaceName" : "[concat(parameters('config').project, parameters('config').env,parameters('config').region,parameters('config').num,'-','oms')]",
-        "aksClusterName": "[concat(parameters('config').project, parameters('config').env,parameters('config').region,parameters('config').num,'-','aks')]",
-        "dnsPrefix" : "[concat(parameters('config').project, parameters('config').env,parameters('config').region,parameters('config').num,'aks','-','dns')]",
+        "logAnalyticsWorkspaceName" : "[concat(parameters('config').project, parameters('config').env,parameters('config').region,parameters('config').num,'-','oms','-',parameters('GITHUB_RUN_ID'))]",
+        "aksClusterName": "[concat(parameters('config').project, parameters('config').env,parameters('config').region,parameters('config').num,'-','aks''-',parameters('GITHUB_RUN_ID'))]",
+        "dnsPrefix" : "[concat(parameters('config').project, parameters('config').env,parameters('config').region,parameters('config').num,'aks','-','dns''-',parameters('GITHUB_RUN_ID'))]",
         "containerInsightsName": "[concat('ContainerInsights', '(', variables('logAnalyticsWorkspaceName'), ')')]"
     },
     "resources": [
