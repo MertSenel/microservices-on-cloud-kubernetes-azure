@@ -1,5 +1,5 @@
 # This is a basic workflow to help you get started with Actions
-name: Deploy Azure Kubernetes Lab Services Only
+name: Deploy AKS Lab Services Only
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the main branch
@@ -9,7 +9,7 @@ on:
     inputs:
       workflowAction:
         description: 'Action'
-        default: 'Deploy Azure Kubernetes Lab Services Only'
+        default: 'Deploy AKS Lab Services Only'
         required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
