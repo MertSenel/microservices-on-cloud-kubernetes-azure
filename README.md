@@ -38,7 +38,7 @@ Some points I can think of right now:
 3- Practice Kubernetes Cluster Administration Operations, Upgrade Cluster Version, Scale-up, Scale-Out  
 4- Setup Advanced Networking for Ingress. Currently project used unprotected HTTP protocol, having the traffic secured via SSL can be an improvement.  
 5- Practice, more advanced load testing, stress testing and reliability testing (chaos monkey).  
-6- Learn how to co-exists multiple team operations on a single AKS cluster using AKS Dev Spaces and Kubernetes namespaces in general.  
+6- Learn how to co-host multiple team's operations on a single AKS cluster (developing different services) using AKS Dev Spaces and Kubernetes namespaces in general.
 
 ## Access to deployed tools & dashboards
 
