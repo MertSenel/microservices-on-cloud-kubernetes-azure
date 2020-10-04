@@ -81,7 +81,7 @@ if ($DeployServices) {
     Start-Sleep -Seconds 5
 
     Write-Output "Startkubectl apply -f istio.aks.yaml"
-    kubectl apply -f istio.aks.yaml 
+    kubectl apply -f './ps1/workflow/istio.aks.yaml'
     Write-Output "Finished kubectl apply -f istio.aks.yaml"
 
     $prometheus = kubectl get deployment.apps/prometheus -n istio-system
