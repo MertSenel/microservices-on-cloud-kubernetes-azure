@@ -32,13 +32,14 @@ My purpose with this repository is to have a baseline for quick and fast start w
 
 Then use the infrastructure to work on more advanced DevOps concepts. 
 
-Some points I can think of right now:  
+Some improvements I can think of right now:  
 1- Learn and Practice with the Observability and Monitoring Tools  
 2- Practice IaC and Pipeline Concepts, (GitHub Action provided here is not a good reference for proper CI/CD, they are quick and easy methods to keep everything  contained to a GitHub Repository)
 3- Practice Kubernetes Cluster Administration Operations, Upgrade Cluster Version, Scale-up, Scale-Out  
 4- Setup Advanced Networking for Ingress. Currently project used unprotected HTTP protocol, having the traffic secured via SSL can be an improvement.  
 5- Practice, more advanced load testing, stress testing and reliability testing (chaos monkey).  
 6- Learn how to co-host multiple team's operations on a single AKS cluster (developing different services) using AKS Dev Spaces and Kubernetes namespaces in general.
+7- Build the application services from source, and customize them to integrate with Azure Application Insights for APM and Telemetry Logging.  
 
 ## Access to deployed tools & dashboards
 
@@ -136,7 +137,7 @@ The workflow has following steps:
 13. deploy Online Boutique and check its proper deployment
 14. run kubectl get all to display all deployed assets and IP address information
 
-Application can now be accessed as described [above](https://github.com/didier-durand/microservices-on-cloud-kubernetes#access-to-application--load-generator)
+Application can now be accessed as described below.
 
 
 ### AKS Lab Demo User Snippets
