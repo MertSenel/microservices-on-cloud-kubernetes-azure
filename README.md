@@ -233,7 +233,7 @@ is made of13 pods. This high-level of granularity is the accepted Kubernetes pat
 delivery, exhaustive unit testing, higher resilience, optimal scalability, etc. But, it also requires the use of a thorough set of tools to 
 maximize the observability of the system. If "divide and conquer" is the motto of cloud-native architectures, the motto of their operations is probably 
 "observe to sustain": when working with Kubernetes application, one feels very quickly the need for (very) solid tools monitoring automatically 
-the myriad of objects (services, pods, ingress, volumes, etc.) composing the system.   
+the myriad of objects (services, pods, ingress, volumes, etc.) composing the system.  
 
 3. **GCP Tooling:** the application is instrumented for [Stackdriver (profiling, logging, debugging)](https://en.wikipedia.org/wiki/Stackdriver). So, 
 the source code of this application provides the right guidance to see how to code in order to obtain the right leverage on tools directly available 
@@ -244,22 +244,21 @@ from the GCP service portfolio.
 To start with, you need an active Azure account that you can use the providers required for this project, like Kubernetes and Azure Monitor.
 
 Then, fork our repository and define the required [Github Secrets](https://docs.github.com/en/actions/reference/encrypted-secrets) in your forked 
-repository: 
+repository:
 
-All you need for this project is to setup one secret called "AZURE_CREDENTIALS". 
-Open the run the powershell script 'New-AzAksLabPrerequisites.ps1' you can find [here](/ps1/tools/New-AzAksLabPrerequisites.ps1)
+All you need for this project is to setup one secret called **"AZURE_CREDENTIALS"**. 
+Open the run the powershell script **'New-AzAksLabPrerequisites.ps1'** you can find [here](/ps1/tools/New-AzAksLabPrerequisites.ps1)
 
-This script will create a Service principal, save the credential json file to your local as "AZURE_CREDENTIALS.json" and also create a new environment variable called "AZURE_CREDENTIALS" in your local system. 
+This script will create a Service principal, save the credential json file to your local as **"AZURE_CREDENTIALS.json"** and also create a new environment variable called **"AZURE_CREDENTIALS"** in your local system. 
 
 This local environment variable part is optional, but it makes it easier for you to also run the scripts locally, without using github actions. 
 
-Once you have the json file generated, copy and paste the contents of that file as your "AZURE_CREDENTIALS" Github Repository Secret.
-
+Once you have the json file generated, copy and paste the contents of that file as your **"AZURE_CREDENTIALS"** Github Repository Secret.
 
 To easily launch the workflow, you can launch it with the [manual dispatch feature of Github](https://github.blog/changelog/2020-07-06-github-actions-manual-triggers-with-workflow_dispatch/) that you can see as a launch button in the Action tab of your project for 
-the "Deploy AKS Lab Infra and Services" workflow. Similarly, you can stop it via similar button in "Clean-Up AKS Lab Resources" workflow.
+the **"Deploy AKS Lab Infra and Services"** workflow. Similarly, you can stop it via similar button in **"Clean-Up AKS Lab Resources"** workflow.
 
-If you already have deployed the Infrastructure but something went wrong during services installation you can run "Deploy AKS Lab Services Only" to skip Infrastructure deployment and directly go to service deployment.
+If you already have deployed the Infrastructure but something went wrong during services installation you can run **"Deploy AKS Lab Services Only"** to skip Infrastructure deployment and directly go to service deployment.
 
 When the deployment workflow completes successfully, you should be able to access the Online Boutique from anywhere on the Internet at the pubic IP 
 address displayed in the final lines of step "Deploy AKS Lab Infra and Services" 
@@ -269,5 +268,5 @@ To get access to the cluster via kubectl see [above](#AKS-Lab-Demo-User-Snippets
 Finally, you should [install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) and 
 [install istioctl](https://istio.io/latest/docs/setup/install/istioctl/) if not present on your laptop yet.
 
-To install these on a Windows laptop, I've left a [script](/ps1/tools/Install-ToolsOnWindows.ps1) 'Install-ToolsOnWindows.ps1' with snippets inside to show you how to install istioctl and kubectl on a Windows machine. 
+To install these on a Windows laptop, I've left a [script](/ps1/tools/Install-ToolsOnWindows.ps1) **'Install-ToolsOnWindows.ps1'** with snippets inside to show you how to install istioctl and kubectl on a Windows machine. 
 They are both stand-alone executables so there are many ways to install them.
