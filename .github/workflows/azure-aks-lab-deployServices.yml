@@ -42,7 +42,7 @@ jobs:
           # Set this value to true to enable Azure PowerShell Login in addition to Az CLI login
           enable-AzPSSession: true # optional
           
-      - name: Azure PowerShell - Deploy AKS Cluster and All Microservices
+      - name: Azure PowerShell - Deploy All Microservices
         uses: Azure/powershell@v1
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
