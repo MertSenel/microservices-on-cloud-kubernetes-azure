@@ -239,7 +239,7 @@ the myriad of objects (services, pods, ingress, volumes, etc.) composing the sys
 the source code of this application provides the right guidance to see how to code in order to obtain the right leverage on tools directly available 
 from the GCP service portfolio.
 
-# Setup for forks
+## Setup for forks
 
 To start with, you need an active Azure account that you can use the providers required for this project, like Kubernetes and Azure Monitor.
 
