@@ -13,8 +13,6 @@ This is an implementation of the same micro-services pattern deployment lab impl
 
 (see [Credits](#credits) Section for more information).
 
-
-Sections below are taken from the original project:
 > The purpose of this repository is to provide the fully automated setup of a nice-looking (see [screenshots](https://github.com/GoogleCloudPlatform/microservices-demo#screenshots)) 
 showcase / testbed for a cloud-native ([precisely defined](https://docs.microsoft.com/en-us/dotnet/architecture/cloud-native/definition) application
 by Microsoft) on a cloud-hosted Kubernetes cluster (here [GKE by Google Cloud](https://cloud.google.com/kubernetes-engine)) based on an interesting [service mesh](https://www.redhat.com/en/topics/microservices/what-is-a-service-mesh). 
