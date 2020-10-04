@@ -14,9 +14,11 @@ param (
 $Build_Uid = ""
 if ($ForceUnique) {
     if ((Test-Path -Path "Env:\GITHUB_RUN_ID")) {
+        Write-Output "Github Run ID is being used"
         $Build_Uid = (Get-ChildItem -Path "Env:\GITHUB_RUN_ID").value = (Get-ChildItem -Path "Env:\GITHUB_RUN_ID").value
     }
     else {
+        Write-Output "Github Run ID cannot be found a random integer is being used"
         $Build_Uid = (Get-Random -Maximum 99999).ToString()
     }
 }
