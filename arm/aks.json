@@ -28,7 +28,7 @@
             "type": "int",
             "defaultValue": 3,
             "metadata": {
-                "description": "The number of nodes for the cluster. We need 3 minimum nodes for the Microservices Demo" 
+                "description": "The number of nodes for the cluster. We need 3 minimum nodes for the Microservices Demo"
             },
             "minValue": 1,
             "maxValue": 100
@@ -59,16 +59,16 @@
         },
         "GITHUB_RUN_ID": {
             "type": "string",
-            "defaultValue":  "",
+            "defaultValue": "",
             "metadata": {
                 "description": "Unique GITHUB_RUN_ID"
             }
         }
     },
     "variables": {
-        "logAnalyticsWorkspaceName" : "[concat(parameters('config').project, parameters('config').env,parameters('config').region,parameters('config').num,'-','oms',parameters('GITHUB_RUN_ID'))]",
+        "logAnalyticsWorkspaceName": "[concat(parameters('config').project, parameters('config').env,parameters('config').region,parameters('config').num,'-','oms',parameters('GITHUB_RUN_ID'))]",
         "aksClusterName": "[concat(parameters('config').project, parameters('config').env,parameters('config').region,parameters('config').num,'-','aks',parameters('GITHUB_RUN_ID'))]",
-        "dnsPrefix" : "[concat(parameters('config').project, parameters('config').env,parameters('config').region,parameters('config').num,'aks','-','dns',parameters('GITHUB_RUN_ID'))]",
+        "dnsPrefix": "[concat(parameters('config').project, parameters('config').env,parameters('config').region,parameters('config').num,'aks','-','dns',parameters('GITHUB_RUN_ID'))]",
         "containerInsightsName": "[concat('ContainerInsights', '(', variables('logAnalyticsWorkspaceName'), ')')]"
     },
     "resources": [
@@ -136,7 +136,7 @@
                 "[resourceId('Microsoft.ContainerService/managedClusters',variables('aksClusterName'))]"
             ],
             "tags": {
-                "displayName" : "Container Insights Solution"
+                "displayName": "Container Insights Solution"
             },
             "properties": {
                 "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces',variables('logAnalyticsWorkspaceName'))]"
@@ -153,6 +153,10 @@
         "aksClusterName": {
             "type": "string",
             "value": "[variables('aksClusterName')]"
+        },
+        "logAnalyticsWorkspaceName": {
+            "type": "string",
+            "value": "[variables('logAnalyticsWorkspaceName')]"
         },
         "controlPlaneFQDN": {
             "type": "string",

@@ -56,6 +56,7 @@ if ($DeployInfra) {
     Write-Output "Start ARM Deployment"
     $AzDeployment = New-AzResourceGroupDeployment @Args
     $AksClusterName = $AzDeployment.Outputs.aksClusterName.value
+    $logAnalyticsWorkspaceName = $AzDeployment.Outputs.aksClusterName.logAnalyticsWorkspaceName
     Write-Output "End ARM Deployment"
 }
 
@@ -132,6 +133,9 @@ kubectl wait --for=condition=available --timeout=500s deployment/shippingservice
 #Clean Up
 if ($CleanUpAfter) {
     Write-Output "Clean Up Lab Resource as CleanUpAfter Flag is Passed"
+    #Force Delete Log Analytics Workspace Otherwise it doesn't release the DNS name for 14 day due to soft-delete behaviour
+    #See: https://docs.microsoft.com/en-us/azure/azure-monitor/platform/delete-workspace#soft-delete-behavior
+    Remove-AzOperationalInsightsWorkspace -ResourceGroupName $ResourceGroupName -Name $logAnalyticsWorkspaceName -ForceDelete
     Remove-AzResourceGroup -Name $ResourceGroupName -Force
 }
 else {
