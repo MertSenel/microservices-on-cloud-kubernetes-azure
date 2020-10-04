@@ -6,9 +6,15 @@ param (
     [Parameter()][string]$ArmTemplateParameterFilePath = './arm/aks.parameters.json',
     [Parameter()][string]$ISTIO_VERSION = "1.7.3",
     [Parameter()][string]$APPL_VERSION = 'v0.2.0',
-    [Parameter()][string]$APPL_NS = 'default'
+    [Parameter()][string]$APPL_NS = 'default',
+    [Parameter()][switch]$DeployInfra,
+    [Parameter()][switch]$ForceUniqueName,
+    [Parameter()][switch]$CleanUpAfter
 )
+# If ForceUniqueName naming flag is passed Assign a Hyphen followed by a Random Integer to $Build_Uid if not passed just assign an empty String
+$Build_Uid = $ForceUniqueName ? ('-' + (Get-Random -Maximum 99999).ToString()) : ""
 
+#Setup config and credentials
 $localSpnCreds = Get-ChildItem -Path "Env:\$EnvironmentVariableName"
 $spn = $localSpnCreds.Value | ConvertFrom-Json
 
@@ -17,8 +23,7 @@ $config = $ArmTemplateParameters.parameters.config.value
 
 #region Curate Variables
 $SubscriptionId = $spn.subscriptionId
-$ResourceGroupName = $config.project + '-' + $config.env + '-' + 'aks' + '-' + $config.region + $config.num
-$AksClusterName = $config.project + $config.env + $config.region + $config.num + '-aks'
+$ResourceGroupName = $config.project + '-' + $config.env + '-' + 'aks' + '-' + $config.region + $config.num + $Build_Uid
 $Location = $ArmTemplateParameters.parameters.location.value
 #endregion
 
@@ -36,20 +41,24 @@ if ((!$CurrentContext) -or ($CurrentContext.Subscription.Id -ne $SubscriptionId)
 }
 #endregion
 
-#Create/Update the resource Group
-New-AzResourceGroup -ResourceGroupName $ResourceGroupName -Location $Location -Force | out-null
+if ($DeployInfra) {
+    #Create/Update the resource Group
+    New-AzResourceGroup -ResourceGroupName $ResourceGroupName -Location $Location -Force | out-null
 
-$Args = @{
-    ResourceGroupName     = $ResourceGroupName
-    Name                  = "$(new-guid)"
-    TemplateFile          = $ArmTemplateFilePath
-    TemplateParameterFile = $ArmTemplateParameterFilePath
+    $Args = @{
+        ResourceGroupName     = $ResourceGroupName
+        Name                  = "$(new-guid)"
+        TemplateFile          = $ArmTemplateFilePath
+        TemplateParameterFile = $ArmTemplateParameterFilePath
+        GITHUB_RUN_ID         = $Build_Uid
+    }
+
+    Write-Output "Start ARM Deployment"
+    $AzDeployment = New-AzResourceGroupDeployment @Args
+    $AksClusterName = $AzDeployment.Outputs.aksClusterName.value
+    Write-Output "End ARM Deployment"
 }
 
-Write-Output "Start ARM Deployment"
-$AzDeployment = New-AzResourceGroupDeployment @Args
-
-Write-Output "End ARM Deployment"
 
 Write-Output "Get kubectl Credentials"
 Import-AzAksCredential -ResourceGroupName $ResourceGroupName -Name $AksClusterName -Force
@@ -63,14 +72,28 @@ Write-Output "Finished istio operator init"
 Write-Output "Startkubectl create ns istio-system"
 kubectl create ns istio-system
 Write-Output "Finished kubectl create ns istio-system"
+Start-Sleep -Seconds 5
 
 Write-Output "Startkubectl apply -f istio.aks.yaml"
 kubectl apply -f istio.aks.yaml 
 Write-Output "Finished kubectl apply -f istio.aks.yaml"
 
-Start-Sleep -Seconds 5
+$prometheus = kubectl get deployment.apps/prometheus -n istio-system
+$grafana = kubectl get deployment.apps/grafana -n istio-system
+$kiali = kubectl get deployment.apps/kiali -n istio-system
 
-Write-Output "Start Waiting for Istio Addons"
+$retryCounter = 0
+while (((!$prometheus) -or (!$grafana) -or (!$kiali)) -and ($retryCounter -lt 30)) {
+    $prometheus = (kubectl get deployment.apps/prometheus -n istio-system 2> $null)
+    $grafana = (kubectl get deployment.apps/grafana -n istio-system 2> $null)
+    $kiali = (kubectl get deployment.apps/kiali -n istio-system 2> $null)
+    Write-Output "Waiting for Istio Add-On Deployments To be Created"
+    Start-Sleep -Seconds 30
+    $retryCounter++
+}
+Write-Output "All Istio Add-On Deployments Found"
+
+Write-Output "Start Waiting for Istio Addon Deployment to be Completed"
 kubectl wait --for=condition=available --timeout=500s deployment/prometheus -n istio-system
 kubectl wait --for=condition=available --timeout=500s deployment/grafana -n istio-system
 kubectl wait --for=condition=available --timeout=500s deployment/kiali -n istio-system
@@ -106,6 +129,11 @@ kubectl wait --for=condition=available --timeout=500s deployment/productcatalogs
 kubectl wait --for=condition=available --timeout=500s deployment/recommendationservice
 kubectl wait --for=condition=available --timeout=500s deployment/shippingservice
 
-
-
-
+#Clean Up
+if ($CleanUpAfter) {
+    Write-Output "Clean Up Lab Resource as CleanUpAfter Flag is Passed"
+    Remove-AzResourceGroup -Name $ResourceGroupName -Force
+}
+else {
+    kubectl get all -n "$APPL_NS"
+}

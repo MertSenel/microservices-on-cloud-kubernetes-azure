@@ -7,7 +7,7 @@
                 "project": "test",
                 "env": "lab",
                 "region": "aue",
-                "num": "05"
+                "num": "01"
             }
         },
         "location": {
@@ -17,7 +17,7 @@
             "value": 0
         },
         "agentCount": {
-            "value": 2
+            "value": 3
         },
         "agentVMSize": {
             "value": "Standard_B2ms"
