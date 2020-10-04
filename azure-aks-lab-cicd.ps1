@@ -30,7 +30,7 @@ $config = $ArmTemplateParameters.parameters.config.value
 
 #region Curate Variables
 $SubscriptionId = $spn.subscriptionId
-$ResourceGroupName = $config.project + '-' + $config.env + '-' + 'aks' + '-' + $config.region + $config.num
+$ResourceGroupName = $config.project + '-' + $config.env + '-' + 'aks' + '-' + $config.region + $config.num + '-' + $Build_Uid
 $Location = $ArmTemplateParameters.parameters.location.value
 #endregion
 
