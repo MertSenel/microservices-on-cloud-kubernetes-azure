@@ -61,7 +61,7 @@ if ($DeployInfra) {
 
     #Update Resource Names with Deployment Outputs In case They are Different/Randomized
     $AksClusterName = $AzDeployment.Outputs.aksClusterName.value
-    $logAnalyticsWorkspaceName = $AzDeployment.Outputs.aksClusterName.logAnalyticsWorkspaceName
+    $logAnalyticsWorkspaceName = $AzDeployment.Outputs.logAnalyticsWorkspaceName.value
     Write-Output "End ARM Deployment"
 }
 
