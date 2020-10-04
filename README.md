@@ -53,10 +53,10 @@ about the active objects. When *`kubectl proxy`* is active, the dashboard is ava
 The security check at login is most easily satisfied by selection the login option of config file (see Prereqs to obtain it in Setup section).~~ 
 
 
-<img src="img/screenshots/aks-workloads.png" height="300">
-<img src="img/screenshots/aks-portal-services.png" height="300">
-<img src="img/screenshots/azure-container-monitoring.png" height="300">
-<img src="img/screenshots/azure-container-monitoring-2.png" height="300">
+<img src="img/screenshots/aks-workloads.png" height="200">
+<img src="img/screenshots/aks-portal-services.png" height="200">
+<img src="img/screenshots/azure-container-monitoring.png" height="200">
+<img src="img/screenshots/azure-container-monitoring-2.png" height="200">
 
 1. **Azure Portal & Azure Container Insights Solution**
 As per Azure [Documentation](https://docs.microsoft.com/en-us/azure/aks/kubernetes-dashboard) Kubernetes Dashboard is soon to be deprecated and recommended solution is to use Azure Container Insights Solution which brings, the management plane visibility to cloud providers operations tools.  
