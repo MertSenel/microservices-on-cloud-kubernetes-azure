@@ -26,9 +26,10 @@ up from scratch. It makes it much faster to grasp the philosophy of the distribu
 
 My Purpose was to create an Cloud Native Kubernetes Lab, for Operations, DevOps and Site Reliability Engineering Perspective.
 
-One of the main problem for training complex infrastructure scenarios is that, it's not always possible to have a real life simulating application workload to work with. 
+One of the main problem for training complex infrastructure scenarios is that, it's not always possible to have an application workload to work with that can simulate real life scenarios, or close to a production workload in terms of complexity. 
 
-My purpose with this repository is to have a baseline for quick and fast start. 
+My purpose with this repository is to have a baseline for quick and fast start with a function Azure Kubernetes Lab. 
+
 Then use the infrastructure to work on more advanced DevOps concepts. 
 
 Some points I can think of right now:
